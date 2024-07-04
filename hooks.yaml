@@ -1,0 +1,24 @@
+- id: deploy
+  execute-command: /home/<account>/webhook/deploy.sh
+  command-working-directory: /home/<account>
+  pass-arguments-to-command:
+    - source: payload
+      name: repository.name
+    - source: payload
+      name: repository.clone_url
+    - source: payload
+      name: head_commit.id
+  trigger-rule:
+    and:
+      - match:
+          type: payload-hmac-sha1
+          secret: <github_webhook_secret>
+          parameter:
+            source: header
+            name: X-Hub-Signature
+      - match:
+          type: value
+          value: refs/heads/main
+          parameter:
+            source: payload
+            name: ref
