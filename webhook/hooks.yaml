@@ -4,44 +4,52 @@
 
   command-working-directory: /home/boltservice
 
+  response-message: I got the payload!
+
+  response-headers:
+
+  - name: Access-Control-Allow-Origin
+
+    value: '*'
+
   pass-arguments-to-command:
 
-    - source: payload
+  - source: payload
 
-      name: repository.name
+    name: head_commit.id
 
-    - source: payload
+  - source: payload
 
-      name: repository.clone_url
+    name: pusher.name
 
-    - source: payload
+  - source: payload
 
-      name: head_commit.id
+    name: pusher.email
 
   trigger-rule:
 
     and:
 
-      - match:
+    - match:
 
-          type: payload-hmac-sha1
+        type: payload-hmac-sha1
 
-          secret: ijUGTFUYGkljNKUHkadbkjsfb
+        secret: ijUGTFUYGkljNKUHkadbkjsfb
 
-          parameter:
+        parameter:
 
-            source: header
+          source: header
 
-            name: X-Hub-Signature
+          name: X-Hub-Signature
 
-      - match:
+    - match:
 
-          type: value
+        type: value
 
-          value: refs/heads/main
+        value: refs/heads/master
 
-          parameter:
+        parameter:
 
-            source: payload
+          source: payload
 
-            name: ref
+          name: ref
